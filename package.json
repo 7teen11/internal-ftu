@@ -1,0 +1,12 @@
+{
+  "name": "internal-ftu-monolith",
+  "version": "1.0.0",
+  "description": "Internal Employee Chat Monolith",
+  "scripts": {
+    "install:all": "cd backend && npm install && cd ../frontend && npm install",
+    "build": "cd frontend && npm run build",
+    "start": "node backend/src/server.js",
+    "test": "cd backend && npm test"
+  }
+}
+
