@@ -12,8 +12,12 @@ if (!fs.existsSync(UPLOADS_DIR)) {
 
 export const db = new DatabaseSync(DB_PATH);
 
-// Enable WAL mode and foreign key constraints
+// Enable WAL mode, RAM cache tuning (64MB), and foreign key constraints
 db.exec('PRAGMA journal_mode = WAL;');
+db.exec('PRAGMA synchronous = NORMAL;');
+db.exec('PRAGMA cache_size = -64000;');
+db.exec('PRAGMA temp_store = MEMORY;');
+db.exec('PRAGMA busy_timeout = 5000;');
 db.exec('PRAGMA foreign_keys = ON;');
 
 export function initDatabase() {
