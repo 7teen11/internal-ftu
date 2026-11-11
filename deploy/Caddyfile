@@ -1,0 +1,11 @@
+# Caddy Reverse Proxy Configuration for FTU Internal Chat
+# Serves the application on standard HTTP Port 80 (supports Socket.io WebSockets and 50MB uploads)
+
+:80 {
+	request_body {
+		max_size 55MB
+	}
+
+	reverse_proxy 127.0.0.1:3000
+}
+

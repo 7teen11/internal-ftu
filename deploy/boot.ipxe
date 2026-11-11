@@ -1,0 +1,50 @@
+#!ipxe
+# =====================================================================
+# FTU Internal Network Boot Menu (Served via Apache HTTP for Gigabit speed)
+# Place this file at: D:\iPXE\http\boot.ipxe
+# Accessible at:      http://192.168.1.50/ipxe/boot.ipxe
+# =====================================================================
+
+set server-ip 192.168.1.50
+set base-url http://${server-ip}/ipxe
+
+:start
+menu FTU Internal Network Boot Server (Arch: ${buildarch})
+item --gap --             ---------------- Operating Systems & Recovery ----------------
+item winpe                Boot Windows 11 PE Recovery / Setup (wimboot over HTTP)
+item ubuntu               Boot Ubuntu Live / Rescue Environment
+item --gap --             ------------------------ Utilities ---------------------------
+item shell                Drop to iPXE Command Shell
+item reboot               Reboot Workstation
+item exit                 Exit iPXE and Continue Local Disk Boot
+choose --default exit --timeout 10000 target && goto ${target}
+
+:winpe
+echo Loading Windows PE via HTTP from ${base-url}/winpe ...
+kernel ${base-url}/wimboot
+initrd ${base-url}/winpe/BCD         BCD
+initrd ${base-url}/winpe/boot.sdi    boot.sdi
+initrd ${base-url}/winpe/boot.wim    boot.wim
+boot || goto failed
+
+:ubuntu
+echo Loading Ubuntu Live Environment via HTTP ...
+kernel ${base-url}/ubuntu/vmlinuz boot=casper netboot=url url=${base-url}/ubuntu/ubuntu.iso ip=dhcp
+initrd ${base-url}/ubuntu/initrd
+boot || goto failed
+
+:shell
+shell
+goto start
+
+:reboot
+reboot
+
+:failed
+echo Boot failed! Returning to menu in 5 seconds...
+sleep 5
+goto start
+
+:exit
+exit
+

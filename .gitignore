@@ -2,8 +2,10 @@ node_modules/
 dist/
 build/
 *.log
+logs/
 .env*
 .DS_Store
 Thumbs.db
+data/chat.db*
 data/uploads/*
 !data/uploads/.gitkeep
